@@ -6,9 +6,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using System.Configuration;
-using SteGriff.AzureStorageTools;
-using Microsoft.WindowsAzure.Storage.Table;
-using TwitterFunctionApp.Entities;
+using TwitterFunctionApp.DAL;
+using TwitterFunctionApp.DAL.Entities;
+using System;
 
 namespace TwitterFunctionApp
 {
@@ -20,7 +20,7 @@ namespace TwitterFunctionApp
             log.Info("OAuth Response");
 
             var requestValues = req.GetQueryNameValuePairs();
-            
+
             string oauthToken = requestValues
                 .FirstOrDefault(q => string.Compare(q.Key, "oauth_token", true) == 0)
                 .Value;
@@ -35,16 +35,25 @@ namespace TwitterFunctionApp
 
             var twitter = new Classes.TwitterClient(log);
             var user = twitter.GetUser(consumerKey, consumerSecret, oauthToken, oauthVerifier);
-            
-            var storageProvider = new AzureStorageProvider(ConfigurationManager.ConnectionStrings["PrimaryStorage"].ConnectionString);
-            var tableProvider = new AzureTableProvider(storageProvider);
-            var table = await tableProvider.GetTableAsync("users");
 
-            var userEntity = new UserEntity(user.UserName, user.UserName);
-            var insert = TableOperation.Insert(userEntity);
-            await table.ExecuteAsync(insert);
-            
-            return req.CreateResponse(HttpStatusCode.OK);
+            var usersData = new Users(ConfigurationManager.ConnectionStrings["PrimaryStorage"].ConnectionString);
+            var userEntity = new UserEntity(user.UserName, user.UserName)
+            {
+                OAuthToken = oauthToken,
+                OAuthVerifier = oauthVerifier,
+                UpdatedDate = DateTime.Now
+            };
+
+            var result = await usersData.InsertUserAsync(userEntity);
+
+            if (string.IsNullOrEmpty(result))
+            {
+                return req.CreateResponse(HttpStatusCode.OK);
+            }
+            else
+            {
+                return req.CreateResponse<string>(HttpStatusCode.InternalServerError, result);
+            }
         }
     }
 }

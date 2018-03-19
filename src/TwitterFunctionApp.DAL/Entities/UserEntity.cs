@@ -1,10 +1,12 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 using System;
 
-namespace TwitterFunctionApp.Entities
+namespace TwitterFunctionApp.DAL.Entities
 {
-    class UserEntity : TableEntity
+    public class UserEntity : TableEntity
     {
+        public UserEntity() : base() { }
+
         public UserEntity(string partitionKey, string rowKey) : base(partitionKey, rowKey)
         {
         }

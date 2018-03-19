@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterFunctionApp", "TwitterFunctionApp\TwitterFunctionApp.csproj", "{6D9CB972-E1DC-4AAC-A5CE-12907A50F5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitterFunctionApp", "TwitterFunctionApp\TwitterFunctionApp.csproj", "{6D9CB972-E1DC-4AAC-A5CE-12907A50F5FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterFunctionApp.DAL", "TwitterFunctionApp.DAL\TwitterFunctionApp.DAL.csproj", "{945B2247-EE25-433A-A1DE-D74A9F7BC55F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6D9CB972-E1DC-4AAC-A5CE-12907A50F5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D9CB972-E1DC-4AAC-A5CE-12907A50F5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D9CB972-E1DC-4AAC-A5CE-12907A50F5FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{945B2247-EE25-433A-A1DE-D74A9F7BC55F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{945B2247-EE25-433A-A1DE-D74A9F7BC55F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{945B2247-EE25-433A-A1DE-D74A9F7BC55F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{945B2247-EE25-433A-A1DE-D74A9F7BC55F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
