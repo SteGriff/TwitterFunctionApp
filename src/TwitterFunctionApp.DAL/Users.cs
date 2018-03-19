@@ -23,7 +23,7 @@ namespace TwitterFunctionApp.DAL
                 var tableProvider = new AzureTableProvider(storageProvider);
                 var table = await tableProvider.GetTableAsync("users");
                 
-                var insert = TableOperation.Insert(userEntity);
+                var insert = TableOperation.InsertOrReplace(userEntity);
                 await table.ExecuteAsync(insert);
             }
             catch (Exception ex)

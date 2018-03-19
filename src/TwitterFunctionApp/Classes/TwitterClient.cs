@@ -40,6 +40,8 @@
             }
             if (response == null) throw new InvalidOperationException("Failed to get user");
 
+            log.Info(response);
+
             Dictionary<string, string> values =
                     response.Split('&').Select(section => section.Split('=')).ToDictionary(
                         bits => bits[0], bits => bits[1]);
@@ -91,27 +93,78 @@
             return values["oauth_token"];
         }
 
-        private Uri PostTweetUri(string tweetText)
+        private Uri VerifyCredentialsUri()
         {
-            log.Info("PostTweetUri");
-            string encodedTweet = WebUtility.UrlEncode(tweetText);
-            return new Uri("https://api.twitter.com/1.1/statuses/update.json?status=" + encodedTweet);
+            log.Info("VerifyCredentialsUri");
+            return new Uri("https://api.twitter.com/1.1/account/verify_credentials.json");
         }
 
-        public string PostTweet(string tweet, string consumerKey, string consumerSecret, string oauthToken, string oauthVerifier)
+        public string VerifyCredentials(string consumerKey, string consumerSecret, string oauthToken, string oauthTokenSecret, string oauthVerifier)
         {
-            log.Info("PostTweet " + consumerKey + " :: " + consumerSecret + " :: " + oauthToken + " :: " + oauthVerifier);
+            log.Info("VerifyCredentials " + consumerKey + " :: " + consumerSecret + " :: " + oauthToken + " :: " + oauthVerifier + " :: " + oauthTokenSecret);
 
             var oauthParameters =
-                new OAuthParameterSet(consumerKey, consumerSecret, oauthToken)
+                new OAuthParameterSet(consumerKey, consumerSecret, oauthToken, oauthTokenSecret)
                 {
                     {OAuthParameter.Verifier, oauthVerifier}
                 };
 
-            string response;
+            string response = null;
             using (var webClient = new WebClient())
             {
-                response = webClient.UploadString(PostTweetUri(tweet), "POST", oauthParameters);
+                var uri = VerifyCredentialsUri();
+                var oauth = oauthParameters.GetOAuthHeaderString(uri, "GET");
+                log.Info(uri.ToString());
+                log.Info(oauth);
+                log.Info("Verify Credentials...");
+                try
+                {
+                    response = webClient.DownloadString(uri, oauthParameters);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.ToString());
+                }
+            }
+
+            if (response == null) throw new InvalidOperationException("Failed to post tweet");
+
+            return response;
+        }
+
+        private Uri PostTweetUri(string tweetText)
+        {
+            log.Info("PostTweetUri");
+            string encodedTweet = tweetText.UrlEncode();
+            return new Uri("https://api.twitter.com/1.1/statuses/update.json?status=" + encodedTweet);
+        }
+
+        public string PostTweet(string tweet, string consumerKey, string consumerSecret, string oauthToken, string oauthTokenSecret, string oauthVerifier)
+        {
+            log.Info("PostTweet " + consumerKey + " :: " + consumerSecret + " :: " + oauthToken + " :: " + oauthVerifier + " :: " + oauthTokenSecret);
+
+            var oauthParameters =
+                new OAuthParameterSet(consumerKey, consumerSecret, oauthToken, oauthTokenSecret)
+                {
+                    {OAuthParameter.Verifier, oauthVerifier}
+                };
+
+            string response = null;
+            using (var webClient = new WebClient())
+            {
+                var uri = PostTweetUri(tweet);
+                var oauth = oauthParameters.GetOAuthHeaderString(uri, "POST");
+                log.Info(uri.ToString());
+                log.Info(oauth);
+                log.Info("Send tweet...");
+                try
+                {
+                    response = webClient.UploadString(uri, string.Empty, oauthParameters);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.ToString());
+                }
             }
 
             if (response == null) throw new InvalidOperationException("Failed to post tweet");

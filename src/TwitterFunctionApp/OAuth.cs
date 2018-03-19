@@ -39,8 +39,9 @@ namespace TwitterFunctionApp
             var usersData = new Users(ConfigurationManager.ConnectionStrings["PrimaryStorage"].ConnectionString);
             var userEntity = new UserEntity(user.UserName, user.UserName)
             {
-                OAuthToken = oauthToken,
+                OAuthToken = user.Token,
                 OAuthVerifier = oauthVerifier,
+                OAuthTokenSecret = user.TokenSecret,
                 UpdatedDate = DateTime.Now
             };
 
@@ -48,7 +49,7 @@ namespace TwitterFunctionApp
 
             if (string.IsNullOrEmpty(result))
             {
-                return req.CreateResponse(HttpStatusCode.OK);
+                return req.CreateResponse(HttpStatusCode.OK, "All good, go to /api/Tweet/{username}");
             }
             else
             {

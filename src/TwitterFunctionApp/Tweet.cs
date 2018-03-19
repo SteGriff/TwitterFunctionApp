@@ -7,6 +7,7 @@ using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using TwitterFunctionApp.DAL;
+using TwitterFunctionApp.Classes;
 
 namespace TwitterFunctionApp
 {
@@ -29,12 +30,15 @@ namespace TwitterFunctionApp
 
             log.Info(user.ToString());
 
-            string theTweet = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM");
+            string tweet1 = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM:ss.ff") + " (Method 1)";
+            var tweetSender = new TweetSender(log, consumerKey, consumerSecret, user.OAuthToken, user.OAuthTokenSecret);
+            var result = await tweetSender.Tweet(tweet1);
 
+            string tweet2 = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM:ss.ff") + " (Method 2)";
             var twitter = new Classes.TwitterClient(log);
-            twitter.PostTweet(theTweet, consumerKey, consumerSecret, user.OAuthToken, user.OAuthVerifier);
+            twitter.PostTweet(tweet2, consumerKey, consumerSecret, user.OAuthToken, user.OAuthTokenSecret, user.OAuthVerifier);
 
-            return req.CreateResponse(HttpStatusCode.OK, "Posted for " + name);
+            return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace TwitterFunctionApp.DAL.Entities
 
         public DateTime UpdatedDate { get; set; }
         public string OAuthToken { get; set; }
+        public string OAuthTokenSecret { get; set; }
         public string OAuthVerifier { get; set; }
 
         public override string ToString()
