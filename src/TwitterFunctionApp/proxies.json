@@ -1,0 +1,17 @@
+﻿{
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "web": {
+      "matchCondition": {
+        "route": "/"
+      },
+      "backendUri": "https://localhost:7071/api/Home"
+    },
+    "acme-challenge": {
+      "matchCondition": {
+        "route": "/.well-known/acme-challenge/{*rest}"
+      },
+      "backendUri": "https://%WEBSITE_HOSTNAME%/api/LetsEncrypt/{rest}"
+    }
+  }
+}
