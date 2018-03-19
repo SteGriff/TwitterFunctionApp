@@ -30,13 +30,9 @@ namespace TwitterFunctionApp
 
             log.Info(user.ToString());
 
-            string tweet1 = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM:ss.ff") + " (Method 1)";
+            string theTweet = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM:ss.ff");
             var tweetSender = new TweetSender(log, consumerKey, consumerSecret, user.OAuthToken, user.OAuthTokenSecret);
-            var result = await tweetSender.Tweet(tweet1);
-
-            string tweet2 = "Posted for " + name + " by TwitterFunctionApp at " + DateTime.Now.ToString("hh:MM:ss.ff") + " (Method 2)";
-            var twitter = new Classes.TwitterClient(log);
-            twitter.PostTweet(tweet2, consumerKey, consumerSecret, user.OAuthToken, user.OAuthTokenSecret, user.OAuthVerifier);
+            var result = await tweetSender.Tweet(theTweet);
 
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
