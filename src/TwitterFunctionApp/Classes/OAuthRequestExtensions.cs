@@ -3,7 +3,7 @@
     using System;
     using System.Net;
 
-    public static class OAuthRequestEx
+    public static class OAuthRequestExtensions
     {
         public static string UploadString(this WebClient webClient, Uri uri, string body, OAuthParameterSet parameterSet)
         {
